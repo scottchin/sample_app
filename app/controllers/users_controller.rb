@@ -17,6 +17,11 @@ class UsersController < ApplicationController
 		redirect_to @user
 	else
 		@title = "Sign up"
+		
+		# clear the password fields when signup fails
+		@user.password = ""
+		@user.password_confirmation = ""
+
 		render 'new'
 	end
   end

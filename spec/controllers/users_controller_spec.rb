@@ -9,11 +9,31 @@ describe UsersController do
       response.should be_success
     end
 
-	it "should have the right title" do
-	  get :new
-	  response.should have_selector("title", :content => "Sign up")
-	end
-	
+	  it "should have the right title" do
+	    get :new
+	    response.should have_selector("title", :content => "Sign up")
+	  end
+	  
+	  it "should have a name field" do
+	    get :new
+	    response.should have_selector("input[name='user[name]'][type='text']")
+    end
+    
+    it "should have a email field" do
+	    get :new
+	    response.should have_selector("input[name='user[email]'][type='text']")
+    end
+	  
+	  it "should have a password field" do
+	    get :new
+	    response.should have_selector("input[name='user[password]'][type='password']")
+    end
+	  
+	  it "should have a password confirmation field" do
+	    get :new
+	    response.should have_selector("input[name='user[password_confirmation]'][type='password']")
+    end
+	  
   end
   
   describe "GET 'show'" do
@@ -64,7 +84,6 @@ describe UsersController do
 			end.should_not change(User, :count)
 		end
 		
-		
 		it "should have the right title" do
 			post :create, :user => @attr
 			response.should have_selector("title", :content => "Sign up")
@@ -74,6 +93,7 @@ describe UsersController do
 			post :create, :user => @attr
 			response.should render_template('new')
 		end
+		
 	end
 	
 	describe "success" do
