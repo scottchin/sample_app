@@ -75,7 +75,7 @@ describe UsersController do
 	
 		before(:each) do
 			@attr = { :name => "", :email => "", 
-				:password => "", :password_confirmation => "" }
+				:password => "abc", :password_confirmation => "def" }
 		end
 		
 		it "should not create a user" do
@@ -93,7 +93,11 @@ describe UsersController do
 			post :create, :user => @attr
 			response.should render_template('new')
 		end
-		
+
+#   it "should clear the password field" do
+#      post :create, :user => @attr
+#      controller.params[:password].should be_blank
+#    end
 	end
 	
 	describe "success" do
@@ -118,6 +122,11 @@ describe UsersController do
 			post :create, :user => @attr
 			flash[:success].should =~ /welcome to the sample app/i
 		end
+		
+		it "should sign the user in" do
+		  post :create, :user => @attr
+		  controller.should be_signed_in
+	  end
 	
 	end
   
