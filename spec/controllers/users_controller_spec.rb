@@ -58,7 +58,29 @@ describe UsersController do
                                            :content => "Next")
       end
       
+      describe "delete links" do
+        
+        it "should not exist for non-admin users" do
+          get :index
+          @users[0..2].each do |user|
+            response.should_not have_selector("li", :content => "delete")
+          end
+        end
+        
+        it "should exist for admin users" do
+          @user.toggle!(:admin)
+          get :index
+          @users[0..2].each do |user|
+            response.should have_selector("li", :content => "delete")
+          end
+          @user.toggle!(:admin)
+        end
+        
+      end
+      
     end
+
+   
   end
 
   describe "GET 'new'" do
@@ -90,6 +112,13 @@ describe UsersController do
 	  it "should have a password confirmation field" do
 	    get :new
 	    response.should have_selector("input[name='user[password_confirmation]'][type='password']")
+    end
+    
+    it "should not be accessible by signed in users" do
+      @user = Factory(:user)
+      test_sign_in(@user)
+      get :new
+      response.should redirect_to(root_path)      
     end
 	  
   end
@@ -156,6 +185,14 @@ describe UsersController do
 #      post :create, :user => @attr
 #      controller.params[:password].should be_blank
 #    end
+
+    it "should not be accessible by signed in users" do
+      @user = Factory(:user)
+      test_sign_in(@user)
+      get :new
+      response.should redirect_to(root_path)      
+    end
+
 	end
 	
 	describe "success" do

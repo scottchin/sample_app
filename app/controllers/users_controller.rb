@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_filter :authenticate, :only => [:index, :edit, :update, :destroy]
   before_filter :correct_user, :only => [:edit, :update]
   before_filter :admin_user,   :only => :destroy
+  before_filter :already_signedin,   :only => [:new, :create]
 
   def new
 	  @title = "Sign up"
@@ -62,6 +63,11 @@ class UsersController < ApplicationController
   end
   
   private
+
+    def already_signedin
+      redirect_to(root_path) if signed_in?
+    end
+  
     def authenticate
       deny_access unless signed_in?
     end

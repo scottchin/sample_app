@@ -15,6 +15,13 @@ describe SessionsController do
       response.should have_selector("title", :content => "Sign in")
     end
     
+    it "should not be accessible by signed in users" do
+      @user = Factory(:user)
+      test_sign_in(@user)
+      get :new
+      response.should redirect_to(root_path)      
+    end
+    
   end
   
   describe "POST 'create'" do
@@ -56,6 +63,13 @@ describe SessionsController do
         post :create, :session => @attr
         response.should redirect_to(user_path(@user))
       end
+    end
+    
+    it "should not be accessible by signed in users" do
+      @user = Factory(:user)
+      test_sign_in(@user)
+      get :new
+      response.should redirect_to(root_path)      
     end
     
   end
