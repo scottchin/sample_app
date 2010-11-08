@@ -10,8 +10,9 @@ class UsersController < ApplicationController
   end
 
   def show
-	  @user = User.find(params[:id])
-	  @title = @user.name
+    @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(:page => params[:page])
+    @title = @user.name
   end
   
   def create
@@ -50,12 +51,7 @@ class UsersController < ApplicationController
     @title = "All users"
     @users = User.paginate(:page => params[:page])
   end
-  
-  def show
-    @user = User.find(params[:id])
-    @title = @user.name
-  end
-  
+
   def destroy
     User.find(params[:id]).destroy
     flash[:success] = "User destroyed."
@@ -66,10 +62,6 @@ class UsersController < ApplicationController
 
     def already_signedin
       redirect_to(root_path) if signed_in?
-    end
-  
-    def authenticate
-      deny_access unless signed_in?
     end
     
     def correct_user
